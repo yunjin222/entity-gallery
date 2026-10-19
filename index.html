@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="한국 플레이어를 위한 데드 바이 데이라이트 킬러 픽률·킬률, 아시아·오세아니아 통계, 이번 주 성소·쿠폰 소식.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>엔티티 갤러리</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: stats-site shell — sticky top bar with three views (메타 / 이번 주 / 전적 검색); each view = title strip, main panel + right rail, then a panel grid. Single dark look (the fog). */
+:root{
+  color-scheme: dark;
+  --bg:#0c0f15;
+  --panel:#141922;
+  --panel-2:#1a2030;
+  --line:#252c3a;
+  --fg:#dde1ea;
+  --muted:#8790a3;
+  --faint:#5b6476;
+  --blood:#d03a44;
+  --blood-soft:rgba(208,58,68,.14);
+  --ember:#e4a64a;
+  --ember-soft:rgba(228,166,74,.12);
+  --ok:#5fb98a;
+  --f-display:"Black Han Sans","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+button{font:inherit}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:24px;height:56px}
+.logo{font-family:var(--f-display);font-size:21px;letter-spacing:.02em;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.logo .hook{width:22px;height:22px;color:var(--blood)}
+.logo small{font-family:var(--f-body);font-size:12px;color:var(--faint)}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.nav button{padding:6px 12px;border-radius:6px;background:none;border:0;color:var(--muted);font-weight:500;white-space:nowrap;cursor:pointer;position:relative}
+.nav button:hover,.nav button:focus-visible{color:var(--fg);background:var(--panel-2);outline:none}
+.nav button[aria-current="page"]{color:var(--fg)}
+.nav button[aria-current="page"]::after{content:"";position:absolute;left:12px;right:12px;bottom:-11px;height:2px;background:var(--blood);border-radius:2px}
+
+/* strip */
+.strip{padding-block:22px 14px;display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;justify-content:space-between}
+.strip h1{font-family:var(--f-display);font-weight:400;font-size:28px;margin:0;letter-spacing:.01em;text-wrap:balance}
+.strip p{margin:4px 0 0;color:var(--muted);max-width:62ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted);white-space:nowrap}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+
+/* grids & panels */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;min-width:0}
+.panel-h{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+.panel-h h2{font-size:15px;margin:0;font-weight:700}
+.panel-h .sub{color:var(--faint);font-size:12px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);padding:0 8px;overflow-x:auto}
+.tabs button{background:none;border:0;color:var(--muted);padding:12px 12px 10px;cursor:pointer;font-weight:500;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--fg);border-color:var(--blood)}
+.tabs button:focus-visible,.seg button:focus-visible,.btn:focus-visible,.copy:focus-visible{outline:2px solid var(--ember);outline-offset:1px}
+.search,.field{background:var(--bg);border:1px solid var(--line);color:var(--fg);border-radius:6px;padding:7px 10px;font:inherit;max-width:100%}
+.search{width:180px}
+.search:focus,.field:focus{outline:none;border-color:var(--blood)}
+
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;color:var(--faint);font-weight:500;text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--panel-2)}
+.rk{width:44px;font-family:var(--f-mono);font-weight:600;color:var(--muted);text-align:center}
+.rk.top{color:var(--ember)}
+.who{display:flex;align-items:center;gap:10px;min-width:150px}
+.av{width:34px;height:34px;flex:none;border-radius:7px;display:grid;place-items:center;font-family:var(--f-display);font-size:15px;color:var(--fg);background:var(--panel-2);border:1px solid var(--line);position:relative;overflow:hidden}
+.av::before{content:"";position:absolute;inset:auto 0 0;height:3px;background:var(--h)}
+.name{font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{display:inline-block;font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.hot{border-color:var(--blood);color:var(--blood);background:var(--blood-soft)}
+.chip.gold{border-color:var(--ember);color:var(--ember)}
+.bar{display:flex;align-items:center;gap:10px;min-width:150px}
+.bar .track{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden}
+.bar .fill{height:100%;background:var(--blood);border-radius:3px}
+.bar .v{width:44px;text-align:right}
+.dim{color:var(--faint);font-size:12px}
+.empty{padding:24px;text-align:center;color:var(--faint)}
+.foot{padding:10px 16px;color:var(--faint);font-size:12px;border-top:1px solid var(--line)}
+
+.rail{display:grid;gap:16px}
+.kpi{padding:16px}
+.kpi .lbl{font-size:12px;color:var(--muted)}
+.kpi .big{font-family:var(--f-mono);font-size:34px;font-weight:600;line-height:1.1;margin-top:4px}
+.kpi .big small{font-size:14px;color:var(--muted);font-weight:400}
+.meter{position:relative;height:8px;background:var(--bg);border-radius:4px;margin:14px 0 6px}
+.meter .fill{position:absolute;inset:0 auto 0 0;background:var(--blood);border-radius:4px}
+.meter .target{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--fg)}
+.scale{display:flex;justify-content:space-between;font-size:11px;color:var(--faint)}
+.mini{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:14px 16px;border-top:1px solid var(--line);font-size:13px;margin:0}
+.mini dt{color:var(--muted)} .mini dd{margin:0;text-align:right}
+.status{padding:14px 16px;display:grid;gap:12px}
+.st{display:grid;grid-template-columns:10px 1fr;gap:10px;align-items:start}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:6px;background:var(--ok);box-shadow:0 0 0 3px rgba(95,185,138,.18)}
+.dot.idle{background:var(--ember);box-shadow:0 0 0 3px rgba(228,166,74,.18)}
+.st b{display:block;font-size:13px}
+.st span{font-size:12px;color:var(--muted)}
+
+/* killer table controls */
+.ctrl{display:flex;flex-wrap:wrap;gap:10px 18px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.ctrl-g{display:flex;align-items:center;gap:8px}
+.ctrl-l{font-size:12px;color:var(--faint)}
+.seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:3px;flex-wrap:wrap}
+.seg button{color:var(--muted);background:none;border:0;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:500;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--blood);color:#fff}
+.ktbl th.on{color:var(--fg)}
+.ktbl th.on::after{content:" ▾";color:var(--blood)}
+.rankcell{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.rankcell small{color:var(--faint);font-family:var(--f-body)}
+.lower4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:1000px){.lower4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.lower4{grid-template-columns:minmax(0,1fr)}}
+/* asia hero */
+.region{margin-bottom:16px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.tiles{grid-template-columns:minmax(0,1fr)}}
+.tile{background:var(--panel);padding:14px 16px;display:grid;gap:6px;align-content:start;min-width:0}
+.tile .k{font-size:12px;color:var(--muted)}
+.tile .v{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;line-height:1.3;overflow-wrap:anywhere}
+.tile .big{font-family:var(--f-mono);font-size:22px;font-weight:600;color:var(--fg)}
+.tile .n{font-size:12px;color:var(--faint)}
+.tile .n.up{color:var(--ember)}
+.cmp th:first-child,.cmp td:first-child{color:var(--muted);white-space:nowrap}
+.cmp th.me,.cmp td.me{background:var(--blood-soft);color:var(--fg);font-weight:700}
+.cmp th.me{color:var(--blood)}
+.cmp td{white-space:nowrap}
+.cmp td .num{font-weight:600}
+
+.lower{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:1000px){.lower{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.lower{grid-template-columns:minmax(0,1fr)}}
+.span2{grid-column:span 2}
+.span3{grid-column:1/-1}
+@media (max-width:1000px){.span3{grid-column:1/-1}}
+@media (max-width:640px){.span2{grid-column:auto}}
+.list{list-style:none;margin:0;padding:6px 0}
+.list li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 16px}
+.list li .i{font-family:var(--f-mono);color:var(--faint);text-align:right}
+.list li:nth-child(-n+3) .i{color:var(--ember)}
+.list li .t{min-width:0;overflow-wrap:anywhere}
+
+.party{padding:14px 16px;display:grid;gap:12px}
+.party .row{display:grid;grid-template-columns:52px minmax(0,1fr) 52px;gap:10px;align-items:center;font-size:13px}
+.party .track{height:18px;background:var(--bg);border-radius:4px;position:relative;overflow:hidden}
+.party .fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--panel-2),var(--muted));opacity:.85}
+.party .share{position:absolute;right:6px;top:0;line-height:18px;font-size:11px;color:var(--faint)}
+.party .row.all{border-top:1px solid var(--line);padding-top:10px}
+.party .row.all .fill{background:var(--fg);opacity:.7}
+
+.sortable th button{color:inherit;background:none;border:0;padding:0;cursor:pointer}
+.sortable th button[aria-sort]::after{content:" ▾"}
+.sortable th button[aria-sort="ascending"]::after{content:" ▴"}
+.kr{display:flex;align-items:center;gap:8px;min-width:120px}
+.kr i{display:block;height:6px;border-radius:3px;background:var(--blood)}
+
+/* weekly */
+.shrine{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:16px}
+@media (max-width:760px){.shrine{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.perk{border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px;align-content:start;background:var(--bg)}
+.perk .glyph{width:44px;height:44px;transform:rotate(45deg);border:1.5px solid var(--h);border-radius:6px;display:grid;place-items:center;margin:4px}
+.perk .glyph span{transform:rotate(-45deg);font-family:var(--f-display);font-size:15px}
+.perk b{font-size:15px;line-height:1.35}
+.perk .own{font-size:12px;color:var(--muted)}
+.perk .cost{font-size:12px;color:var(--ember)}
+.banner{margin:0 16px 16px;padding:10px 12px;border-radius:8px;background:var(--ember-soft);border:1px solid var(--ember);color:var(--ember);font-size:13px}
+.codes td.code{font-family:var(--f-mono);font-weight:600;letter-spacing:.02em;white-space:nowrap}
+.copy{border:1px solid var(--line);background:var(--panel-2);color:var(--fg);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;white-space:nowrap}
+.copy:hover{border-color:var(--muted)}
+.copy.done{border-color:var(--ok);color:var(--ok)}
+.dday{font-family:var(--f-mono);font-size:12px;white-space:nowrap}
+.dday.soon{color:var(--blood)}
+.prose{padding:14px 16px;display:grid;gap:12px}
+.prose p{margin:0;color:var(--muted)}
+.prose h3{margin:0;font-size:14px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:0;font-size:13px}
+.facts dt{color:var(--muted)} .facts dd{margin:0}
+.patch{display:grid;gap:4px}
+.patch-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.patch-h b{font-family:var(--f-mono)}
+.patch ul{margin:4px 0 0;padding-left:18px;display:grid;gap:6px;color:var(--muted)}
+.patch ul strong{color:var(--fg);font-weight:500}
+.ev{display:grid;gap:8px}
+.progress{height:6px;background:var(--bg);border-radius:3px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--ember)}
+
+/* steam */
+.steam{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:900px){.steam{grid-template-columns:minmax(0,1fr)}}
+.form{padding:16px;display:grid;gap:10px}
+.form label{font-weight:700}
+.form .row{display:flex;flex-wrap:wrap;gap:8px}
+.form .field{flex:1 1 260px;padding:10px 12px}
+.btn{border:0;background:var(--blood);color:#fff;border-radius:6px;padding:10px 18px;cursor:pointer;font-weight:700}
+.btn:hover{filter:brightness(1.1)}
+.hint{font-size:12px;color:var(--faint)}
+.err{color:var(--blood);font-size:13px}
+.result{margin:0 16px 16px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:16px;display:grid;gap:14px}
+.idline{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.idline code{font-family:var(--f-mono);font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.links{display:grid;gap:8px}
+.link{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--panel)}
+.link:hover,.link:focus-visible{border-color:var(--blood);outline:none}
+.link b{display:block}
+.link span{font-size:12px;color:var(--muted)}
+.link .go{color:var(--blood);font-weight:700}
+.check{list-style:none;margin:0;padding:14px 16px;display:grid;gap:10px;font-size:13px}
+.check li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px}
+.check li::before{content:"";width:14px;height:14px;border:1.5px solid var(--muted);border-radius:4px;margin-top:3px}
+
+.src{margin-top:16px;padding:16px;display:grid;gap:10px}
+.src h2{font-size:15px;margin:0}
+.src ul{margin:0;padding-left:18px;color:var(--muted);display:grid;gap:4px;font-size:13px}
+.src a{color:var(--fg);text-decoration-color:var(--faint)}
+footer{color:var(--faint);font-size:12px;padding-block:24px 40px}
+@media (prefers-reduced-motion:no-preference){.bar .fill,.meter .fill,.party .fill,.kr i{transition:width .5s ease}}
+@media (max-width:560px){.topbar .wrap{gap:10px}.logo small{display:none}.strip h1{font-size:23px}.nav button{padding:6px 9px}}
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="logo">
+      <svg class="hook" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 2v6"/><path d="M12 8c3.5 0 5 2.3 5 5s-2 5-5 5-5-2.2-5-4.6"/><path d="M7 13.4l-2-1.4"/></svg>
+      엔티티 갤러리 <small>데바데 메타 통계</small>
+    </div>
+    <nav class="nav" aria-label="메뉴">
+      <button id="nav-meta" data-view="meta" aria-current="page">킬러 통계</button>
+      <button id="nav-weekly" data-view="weekly">이번 주</button>
+      <button id="nav-steam" data-view="steam">전적 검색</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ============ 메타 ============ -->
+<div id="view-meta">
+  <section class="strip">
+    <div>
+      <h1>킬러 통계</h1>
+      <p>공식 발표에 나온 킬러별 픽률과 킬률을 한 표에 모았어요. 기준과 정렬을 바꿔 보세요. 패치 <span class="num">10.2.1</span> 기준.</p>
+    </div>
+    <span class="pill"><i></i>공식 발표 3월 · 7월 · 10월 반영</span>
+  </section>
+
+  <div class="grid">
+    <section class="panel" id="killers" aria-labelledby="k-title">
+      <div class="panel-h">
+        <div><h2 id="k-title">킬러 픽률 · 킬률</h2><div class="sub" id="k-window"></div></div>
+        <input class="search" id="k-search" type="search" placeholder="킬러 검색 (예: 리치)" aria-label="킬러 이름 검색">
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-g"><span class="ctrl-l">기준</span>
+          <div class="seg" role="group" aria-label="집계 기준">
+            <button id="ds-broad" data-ds="broad" aria-pressed="true">전체 구간</button>
+            <button id="ds-high" data-ds="high" aria-pressed="false">상위 구간</button>
+            <button id="ds-latest" data-ds="latest" aria-pressed="false">최신 발표</button>
+          </div>
+        </div>
+        <div class="ctrl-g"><span class="ctrl-l">정렬</span>
+          <div class="seg" role="group" aria-label="정렬">
+            <button id="so-pick" data-sort="pick" aria-pressed="true">픽률 우선</button>
+            <button id="so-kill" data-sort="kill" aria-pressed="false">킬률 우선</button>
+          </div>
+        </div>
+      </div>
+      <div class="tbl-wrap"><table class="ktbl">
+        <thead><tr><th class="rk">#</th><th>킬러</th><th id="th-pick">픽률</th><th id="th-kill">킬률</th><th>비고</th></tr></thead>
+        <tbody id="k-body"></tbody>
+      </table></div>
+      <div class="foot" id="k-foot"></div>
+    </section>
+
+    <aside class="rail">
+      <section class="panel" aria-labelledby="avg-l">
+        <div class="kpi">
+          <div class="lbl" id="avg-l">평균 킬률 · 2025.08 – 2026.07</div>
+          <div class="big"><span>59.7</span><small>%</small></div>
+          <div class="meter" aria-hidden="true"><div class="fill" style="width:78.8%"></div><div class="target" style="left:80%"></div></div>
+          <div class="scale"><span>40%</span><span>개발사 목표 60%</span><span>65%</span></div>
+        </div>
+        <dl class="mini">
+          <dt>5번째 발전기 완료 판수</dt><dd class="num">52.5%</dd>
+          <dt>5번째 발전기까지 평균</dt><dd class="num">9분 7초</dd>
+          <dt>같은 생존자 연속 갈고리</dt><dd class="num">10.9%</dd>
+          <dt>생존자 평균 탈출률</dt><dd class="num">40.0%</dd>
+          <dt>작년 평균 킬률</dt><dd class="num">63%</dd>
+        </dl>
+      </section>
+
+      <section class="panel" aria-labelledby="ds-h">
+        <div class="panel-h"><h2 id="ds-h">기준 설명</h2></div>
+        <dl class="mini" style="border-top:0;grid-template-columns:auto minmax(0,1fr)">
+          <dt>전체 구간</dt><dd style="text-align:left">2025.09 – 2026.02, 모든 실력대. 픽률·킬률 상위 5명 수치 공개.</dd>
+          <dt>상위 구간</dt><dd style="text-align:left">같은 기간, 매칭 점수 1800 이상(플레이어 약 18%).</dd>
+          <dt>최신 발표</dt><dd style="text-align:left">2026-10-18 발표, 일본 외 지역. 킬률은 순위만 공개.</dd>
+        </dl>
+        <div class="foot">킬률 = 매 판 죽은 생존자 비율. 1명이면 25%, 4명이면 100%.</div>
+      </section>
+
+      <section class="panel" aria-labelledby="st-h">
+        <div class="panel-h"><h2 id="st-h">데이터 상태</h2></div>
+        <div class="status">
+          <div class="st"><i class="dot"></i><div><b>최신 공식 통계</b><span>2026-10-18 발표 · <span id="since"></span></span></div></div>
+          <div class="st"><i class="dot"></i><div><b>지역별 통계</b><span>2026-07-29 발표 · 1–6월 데이터</span></div></div>
+          <div class="st"><i class="dot idle"></i><div><b>다음 공식 발표</b><span>일정 없음. 올해는 3·4·5·6·7·10월에 나왔어요.</span></div></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="panel region" style="margin-top:16px" aria-labelledby="ao-h">
+    <div class="panel-h">
+      <div><h2 id="ao-h">아시아·오세아니아 플레이어 통계</h2><div class="sub">2026.01.01 – 06.30 · 개발사 지역별 발표</div></div>
+      <span class="chip hot">한국 포함 지역</span>
+    </div>
+    <div class="tiles">
+      <div class="tile"><span class="k">가장 많이 고른 킬러</span><span class="v" id="ao-killer"></span><span class="n up">4개 지역 중 유일하게 구울이 1위</span></div>
+      <div class="tile"><span class="k">킬레이트 1위 킬러</span><span class="v" id="ao-kr"></span><span class="n">4개 지역 중 가장 낮은 1위 수치</span></div>
+      <div class="tile"><span class="k">가장 많이 고른 생존자</span><span class="v" id="ao-surv"></span><span class="n up">다른 지역은 세이블 와드·메그 토마스</span></div>
+      <div class="tile"><span class="k">탈출률 1위 생존자</span><span class="v" id="ao-esc"></span><span class="n up">4개 지역 중 가장 높아요</span></div>
+      <div class="tile"><span class="k">가장 많이 쓴 킬러 퍽</span><span class="v">재앙의 갈고리: 고통의 울림</span><span class="n">모든 지역에서 1위</span></div>
+      <div class="tile"><span class="k">가장 많이 쓴 생존자 퍽</span><span class="v">기회의 창 ✱</span><span class="n">중남미만 데자뷰가 1위</span></div>
+    </div>
+    <div class="tbl-wrap"><table class="cmp">
+      <thead><tr><th>지역별 비교</th><th class="me">아시아·오세아니아</th><th>북미</th><th>유럽</th><th>중남미</th></tr></thead>
+      <tbody id="cmp-body"></tbody>
+    </table></div>
+    <div class="foot">개발사는 항목별 1위만 공개했어요. 슬래셔는 출시 첫 2주, 셰인 위그와스는 출시 첫 5일 데이터라 개발사도 참고용이라고 밝혔습니다.</div>
+  </section>
+
+  <div class="lower lower4">
+    <section class="panel" aria-labelledby="kp-h">
+      <div class="panel-h"><h2 id="kp-h">킬러 퍽 사용 순위</h2><span class="sub">2025.08 – 2026.07</span></div>
+      <ol class="list" id="kperks"></ol>
+    </section>
+    <section class="panel" aria-labelledby="sp-h">
+      <div class="panel-h"><h2 id="sp-h">생존자 퍽 사용 순위</h2><span class="sub">2025.08 – 2026.07</span></div>
+      <ol class="list" id="sperks"></ol>
+    </section>
+    <section class="panel" aria-labelledby="sv-h">
+      <div class="panel-h"><h2 id="sv-h">생존자 픽률</h2><span class="sub">2025.08 – 2026.07</span></div>
+      <ol class="list" id="survs"></ol>
+    </section>
+
+    <section class="panel" aria-labelledby="pt-h">
+      <div class="panel-h"><h2 id="pt-h">파티 규모별 탈출률</h2><span class="sub">막대 = 탈출률 · 오른쪽 = 비중</span></div>
+      <div class="party" id="party"></div>
+      <div class="foot">솔로와 4인 파티의 탈출률 차이는 2%p 안쪽입니다.</div>
+    </section>
+
+  </div>
+
+  <section class="panel src" aria-labelledby="src-h">
+    <h2 id="src-h">출처와 읽는 법</h2>
+    <ul>
+      <li>최신 발표: 개발사 비헤이비어가 2026-10-18에 낸 통계 중 '일본 외 지역' 수치. 킬률은 순위만, 픽률은 상위 5명만 수치를 공개했어요. 초보 구간과 이벤트 모드는 제외됩니다. <a href="https://timesaver.gg/blog/dbd-kill-rates-pick-rates-stats" target="_blank" rel="noopener">영문 정리글</a></li>
+      <li>아시아·오세아니아: 개발사 포럼의 <a href="https://forums.bhvr.com/dead-by-daylight/kb/articles/554-stats-global-stats" target="_blank" rel="noopener">지역별 통계</a> (2026-07-29 발표, 1–6월 데이터) 이미지 4장의 수치를 옮겼어요.</li>
+      <li>전체·상위 구간: 개발사 포럼의 <a href="https://forums.bhvr.com/dead-by-daylight/kb/articles/540-stats-first-look-at-stats-in-2026" target="_blank" rel="noopener">2026년 첫 통계 발표</a> 이미지. 킬러 이름은 포럼 본문과 대조해 붙였고, 이름을 확인할 수 없는 칸은 뺐어요.</li>
+      <li>퍽 1–5위 이름은 공식 차트 아이콘을 맞춰 붙인 비공식 판독입니다. ✱ 표시는 10.2.0 이후 바뀐 퍽, ※ 표시는 한글판 명칭을 확인하지 못해 음역한 이름이에요.</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ============ 이번 주 ============ -->
+<div id="view-weekly" hidden>
+  <section class="strip">
+    <div>
+      <h1>이번 주 소식</h1>
+      <p>비밀의 성소, 쿠폰 코드, 패치 요약, 신규 킬러를 한곳에 모았어요. 매주 수요일 0시(한국 시간) 성소가 바뀐 뒤 갱신합니다.</p>
+    </div>
+    <span class="pill"><i></i>마지막 갱신 <span class="num" id="w-updated"></span></span>
+  </section>
+
+  <div class="grid">
+    <section class="panel" aria-labelledby="sh-h">
+      <div class="panel-h">
+        <div><h2 id="sh-h">비밀의 성소</h2><div class="sub" id="sh-range"></div></div>
+        <span class="pill">교체까지 <span class="num" id="cd-shrine">--</span></span>
+      </div>
+      <div class="shrine" id="shrine"></div>
+      <div class="banner" id="sh-stale" hidden>성소가 이미 바뀌었어요. 새 목록은 곧 반영됩니다.</div>
+    </section>
+
+    <aside class="rail">
+      <section class="panel" aria-labelledby="ev-h">
+        <div class="panel-h"><h2 id="ev-h">진행 중인 이벤트</h2></div>
+        <div class="prose" id="events"></div>
+      </section>
+    </aside>
+  </div>
+
+  <div class="lower">
+    <section class="panel span2" aria-labelledby="cd-h">
+      <div class="panel-h"><div><h2 id="cd-h">사용 가능한 쿠폰 코드</h2><div class="sub">게임 메인 화면 상점 › 코드 입력</div></div><span class="sub" id="perm-note"></span></div>
+      <div class="tbl-wrap"><table class="codes">
+        <thead><tr><th>코드</th><th>보상</th><th>만료</th><th></th></tr></thead>
+        <tbody id="codes"></tbody>
+      </table></div>
+    </section>
+
+    <section class="panel" aria-labelledby="nk-h">
+      <div class="panel-h"><h2 id="nk-h">최신 킬러</h2><span class="sub" id="nk-sub"></span></div>
+      <div class="prose" id="newkiller"></div>
+    </section>
+
+    <section class="panel span3" aria-labelledby="pn-h">
+      <div class="panel-h"><h2 id="pn-h">패치 요약</h2><span class="sub">공식 패치 노트를 한국어로 간추렸어요</span></div>
+      <div class="prose" id="patches"></div>
+    </section>
+  </div>
+
+  <section class="panel src" aria-labelledby="wsrc-h">
+    <h2 id="wsrc-h">출처</h2>
+    <ul>
+      <li>성소·쿠폰: <a href="https://nightlight.gg/shrine" target="_blank" rel="noopener">나이트라이트 성소</a>, <a href="https://nightlight.gg/codes" target="_blank" rel="noopener">나이트라이트 코드 목록</a></li>
+      <li>패치: <a href="https://deadbydaylight.wiki.gg/wiki/Patch_10.2.0" target="_blank" rel="noopener">공식 위키 10.2.X 패치 노트</a></li>
+      <li>신규 킬러: <a href="https://deadbydaylight.wiki.gg/wiki/The_Judgment" target="_blank" rel="noopener">공식 위키</a>, 한글 명칭은 나무위키 기준</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ============ 전적 검색 ============ -->
+<div id="view-steam" hidden>
+  <section class="strip">
+    <div>
+      <h1>전적 검색</h1>
+      <p>스팀 프로필 주소나 아이디를 넣으면 전적을 볼 수 있는 곳으로 바로 연결해 드려요.</p>
+    </div>
+    <span class="pill">스팀 이용자 전용</span>
+  </section>
+
+  <div class="steam">
+    <section class="panel" aria-labelledby="sf-h">
+      <div class="panel-h"><h2 id="sf-h">내 스팀 계정 찾기</h2></div>
+      <form class="form" id="steam-form" novalidate>
+        <label for="steam-input">스팀 프로필 주소 또는 아이디</label>
+        <div class="row">
+          <input class="field" id="steam-input" autocomplete="off" spellcheck="false" placeholder="steamcommunity.com/id/내아이디">
+          <button class="btn" id="steam-go" type="submit">검색</button>
+        </div>
+        <div class="hint">이렇게 넣으면 돼요: 프로필 주소 전체, 17자리 숫자 아이디(7656으로 시작), 또는 사용자 지정 주소 이름</div>
+        <div class="err" id="steam-err" role="alert"></div>
+      </form>
+      <div class="result" id="steam-result" hidden>
+        <div class="idline">
+          <span class="chip gold" id="id-kind"></span>
+          <code id="id-value"></code>
+          <button class="copy" id="id-copy" type="button">복사</button>
+        </div>
+        <div class="links" id="steam-links"></div>
+        <div class="hint">나이트라이트에서는 위 아이디를 검색창에 붙여넣으면 돼요.</div>
+      </div>
+    </section>
+
+    <aside class="rail">
+      <section class="panel" aria-labelledby="ck-h">
+        <div class="panel-h"><h2 id="ck-h">전적이 안 보이면</h2></div>
+        <ul class="check">
+          <li>스팀 프로필 › 프로필 편집 › 개인정보 설정에서 '내 프로필'을 공개로</li>
+          <li>'게임 세부 정보'도 공개로</li>
+          <li>'총 플레이 시간 항상 비공개' 체크 해제</li>
+          <li>바꾼 뒤 몇 분 기다렸다가 다시 조회</li>
+        </ul>
+        <div class="foot">콘솔·에픽게임즈 이용자는 개발사 공식 전적 사이트에서 비헤이비어 계정을 연동해 확인할 수 있어요.</div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<footer>엔티티 갤러리는 팬 프로젝트이며 개발사 비헤이비어 인터랙티브, 나이트라이트와 관련이 없습니다. 픽률이 높다고 강한 킬러는 아닙니다.</footer>
+</main>
+
+<script id="weekly-data" type="application/json">
+{
+  "updated": "2026-10-19",
+  "shrine": {
+    "start": "2026-10-13T15:00:00Z",
+    "end": "2026-10-20T15:00:00Z",
+    "perks": [
+      {"name": "기회의 창", "owner": "케이트 덴슨", "role": "생존자", "cost": 2000},
+      {"name": "빠른 포석", "owner": "비토리오 토스카노", "role": "생존자", "cost": 2000},
+      {"name": "짐승같은 힘", "owner": "트래퍼", "role": "킬러", "cost": 2000},
+      {"name": "기어 헤드", "owner": "데스슬링거", "role": "킬러", "cost": 2000}
+    ]
+  },
+  "codes": [
+    {"code": "GROUNDCHUCKHBD", "reward": "그라운드 척 참", "expires": "2026-10-31"},
+    {"code": "MACHETE", "reward": "슬래셔의 마체테 참", "expires": "2026-10-31"},
+    {"code": "ROADTRIP", "reward": "셰인 위그와스 '다크 바머' 상의", "expires": null, "note": "만료일 표기 불명확"},
+    {"code": "PLAYXENOMORPHIN2V8", "reward": "블러드포인트 20만", "expires": null, "note": "기한 미정"},
+    {"code": "MISSBEHAVIOURGC2026", "reward": "'내 얼굴을 하고 있어' 배너", "expires": null, "note": "기한 미정"}
+  ],
+  "permanentCodes": 41,
+  "events": [
+    {"name": "할로윈 이벤트", "start": "2026-10-13", "end": "2026-11-03", "note": "매년 열리는 할로윈 기간 한정 이벤트예요."}
+  ],
+  "newKiller": {
+    "name": "심판",
+    "chapter": "죄악의 합창 (챕터 41)",
+    "release": "2026-08-25",
+    "power": "신들의 의지 · 신성한 빛",
+    "desc": "빛줄기를 조종해 앞으로 던져 생존자에게 피해와 '이단 표식'을 남깁니다. 표식이 붙은 생존자는 '추방'할 수 있고, 그 뒤 잠시 '열성' 상태가 되어 능력이 강해져요.",
+    "speed": "4.4m/s (110%)",
+    "terror": "32m",
+    "perks": ["천상 존재의 목격", "주술: 손아귀에 있느니", "초토화"],
+    "note": "공식 킬레이트 집계(6/17–8/24) 이후 출시라 메타 순위에는 아직 없어요."
+  },
+  "patches": [
+    {"ver": "10.2.1", "date": "2026-10-14", "title": "핫픽스", "items": ["10.2.0 이후 발견된 문제를 고친 수정 패치예요."]},
+    {"ver": "10.2.0", "date": "2026-10-06", "title": "퍽 대규모 조정 · 생존자 빠른 메시지", "items": [
+      "<strong>생존자 빠른 메시지</strong> 휠에서 정해진 메시지 8개 중 하나를 골라 팀원에게 보냅니다. 설정에서 끄거나 특정 플레이어만 음소거할 수 있어요.",
+      "<strong>나가기 규칙 개편</strong> 남은 생존자가 모두 봇이면 생존자·킬러 모두 판을 포기할 수 있어요. 기존 생존자 '포기'는 전원 빈사일 때 쓰는 '항복'으로 이름이 바뀌었습니다.",
+      "<strong>퍽 조정</strong> 킬러 퍽 27개 이상, 생존자 퍽 15개 이상이 바뀌었어요.",
+      "<strong>차단 스위치</strong> 생존자가 2초 넘게 수리를 멈추면 발동하고, 30/35/40초 동안 발전기를 막습니다.",
+      "<strong>기회의 창</strong> 24m 안의 창틀만 보여주는 대신 넘기가 10% 빨라지고, 넘은 뒤 40/35/30초 재사용 대기가 생겼어요. 판자 오라는 '어두운 감각'으로 옮겨졌습니다.",
+      "<strong>회복력</strong> 부상 중 행동 속도 보너스가 3/6/9%에서 7/8/9%로 올랐어요.",
+      "<strong>동요</strong> 생존자를 들고 있을 때 가속이 14/16/18%로 올랐어요.",
+      "<strong>차분한 영혼</strong> 단점이 사라지고 축복·정화·상자 열기 속도가 8/9/10% 빨라졌어요.",
+      "<strong>동질감</strong> 오라 범위가 14/15/16m로 넓어졌어요."
+    ]}
+  ]
+}
+</script>
+
+<script>
+/* ---------- 메타 데이터 (개발사 2026-10-18 발표, 일본 외 지역) ---------- */
+const DS = {
+  broad:{window:"2025.09 – 2026.02 · 전체 구간",
+    pick:[["헌트리스",5.7],["쉐이프",5.7],["애니매트로닉스",5.6],[null,4.1],["구울",3.9]],
+    kill:[["리치",65.5],["나이트메어",65.3],["원령",64.1],["드레지",62.5],["수도사",62.2]],
+    foot:"구간별 상위 5명만 공개됐어요. 픽률 4위(4.1%)는 이미지에 이름이 없어 표에서 뺐습니다."},
+  high:{window:"2025.09 – 2026.02 · 상위 구간 (매칭 점수 1800+)",
+    pick:[["구울",8.1],[null,7.6],["마스터마인드",5.4],["쉐이프",4.7],["애니매트로닉스",4.1]],
+    kill:[["끄라스",67.1],["퍼스트",66.2],["쌍둥이",65.9],["구울",65.3],["리치",64.7]],
+    foot:"구간별 상위 5명만 공개됐어요. 픽률 2위(7.6%)는 이미지에 이름이 없어 표에서 뺐습니다."},
+  latest:{window:"픽률 2025.08 – 2026.07 · 킬률 2026.06.17 – 08.24 · 일본 외",
+    pick:[["애니매트로닉스",5.2],["헌트리스",5.0],["구울",4.4],["마스터마인드",4.3],["쉐이프",4.2],["군단"],["고스트페이스"],["슬래셔"],["스피릿"],["블라이트"]],
+    kill:[["나이트메어"],["원령"],["리치"],["슬래셔"],["드레지"],["쌍둥이"],["수도사"],["피그"],["어둠의 군주"],["예술가"]],
+    foot:"이번 발표는 킬률을 순위로만, 픽률은 상위 5명만 수치로 공개했어요. 10.1.0 · 10.2.0 패치 전 데이터입니다."}
+};
+const META = {
+  kperks:["재앙의 갈고리: 고통의 울림","숨을 곳 없음","깜짝 상자","치명적인 추적자","바비큐 & 칠리","차단 스위치 ✱","속임수","교착 상태","부정한 개입","빛의 피조물"],
+  sperks:["기회의 창 ✱","유연함","데자뷰","회복력 ✱","전력 질주","죽기 살기","피네스 ※","결정적인 일격","아드레날린","굳건한 의지"],
+  survs:[["세이블 와드",7.6],["펭 민",6.3],["메그 토마스",5.9],["케이트 덴슨",5.3],["라라 크로프트",5.2],["드와이트 페어필드"],["클로뎃 모렐"],["니아 칼슨"],["레온 S. 케네디"],["에이다 웡"]],
+  party:[["솔로",40.1,40.1],["2인",32.7,39.4],["3인",16,39.5],["4인",11.3,41.8]], all:40.0
+};
+/* 개발사 지역별 통계 (2026-07-29 발표, 2026.01.01 – 06.30) */
+const REGIONS={
+  order:["ao","na","eu","la"],
+  rows:[
+    ["가장 많이 고른 킬러",{ao:"구울",na:"애니매트로닉스",eu:"마스터마인드",la:"헌트리스"}],
+    ["킬레이트 1위",{ao:["슬래셔",64.5],na:["슬래셔",67.7],eu:["슬래셔",70.0],la:["슬래셔",71.2]}],
+    ["가장 많이 고른 생존자",{ao:"펭 민",na:"세이블 와드",eu:"세이블 와드",la:"메그 토마스"}],
+    ["탈출률 1위",{ao:["셰인 위그와스",54.5],na:["셰인 위그와스",43.1],eu:["셰인 위그와스",44.6],la:["셰인 위그와스",41.2]}],
+    ["킬러 퍽 1위",{ao:"고통의 울림",na:"고통의 울림",eu:"고통의 울림",la:"고통의 울림"}],
+    ["생존자 퍽 1위",{ao:"기회의 창",na:"기회의 창",eu:"기회의 창",la:"데자뷰"}]
+  ]
+};
+
+let W={};
+try{W=JSON.parse(document.getElementById("weekly-data").textContent)}catch(e){W={}}
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const hue=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%360;return `hsl(${h} 55% 55%)`;};
+const avatar=n=>`<div class="av" style="--h:${hue(n)}" aria-hidden="true">${esc(n[0])}</div>`;
+const KST=d=>new Date(new Date(d).getTime()+9*3600e3);
+const fmtDate=d=>{const k=KST(d);return `${k.getUTCMonth()+1}월 ${k.getUTCDate()}일`;};
+const daysLeft=iso=>Math.ceil((new Date(iso+"T23:59:59+09:00")-Date.now())/86400000);
+
+/* ---------- 킬러 표 ---------- */
+let ds="broad", sortBy="pick", q="";
+function rowsFor(d){
+  const m=new Map();
+  const add=(arr,key)=>arr.forEach(([n,v],i)=>{if(!n)return;const r=m.get(n)||{n};r[key]={r:i+1,v:v??null};m.set(n,r);});
+  add(d.pick,"pick");add(d.kill,"kill");
+  return [...m.values()];
+}
+function cell(x,kind){
+  if(!x)return `<span class="dim">순위 밖</span>`;
+  if(x.v==null)return `<span class="rankcell">${x.r}위 <small>· 수치 비공개</small></span>`;
+  const w=kind==="pick"?Math.min(100,x.v/9*100):Math.max(4,(x.v-55)/15*100);
+  return `<div class="bar"><div class="track"><div class="fill" style="width:${w.toFixed(1)}%;${kind==="pick"?"background:var(--ember)":""}"></div></div><span class="v num">${x.v.toFixed(1)}%</span></div>`;
+}
+function renderKillers(){
+  const d=DS[ds];
+  $("#k-window").textContent=d.window;
+  const other=sortBy==="pick"?"kill":"pick";
+  const rows=rowsFor(d).sort((a,b)=>{
+    const A=a[sortBy],B=b[sortBy];
+    if(A&&B)return A.r-B.r; if(A)return -1; if(B)return 1;
+    return (a[other]?.r??99)-(b[other]?.r??99);
+  });
+  $("#th-pick").classList.toggle("on",sortBy==="pick");$("#th-kill").classList.toggle("on",sortBy==="kill");
+  const f=rows.filter(r=>!q||r.n.includes(q));
+  $("#k-body").innerHTML=f.length?f.map((r,i)=>{
+    const tags=[];
+    if(r.pick&&r.kill)tags.push(`<span class="chip hot">픽·킬 모두 상위</span>`);
+    if(r.kill&&r.kill.r===1)tags.push(`<span class="chip gold">킬률 1위</span>`);
+    if(r.pick&&r.pick.r===1)tags.push(`<span class="chip gold">픽률 1위</span>`);
+    return `<tr><td class="rk${i<3?" top":""}">${i+1}</td><td><div class="who">${avatar(r.n)}<span class="name">${esc(r.n)}</span></div></td><td>${cell(r.pick,"pick")}</td><td>${cell(r.kill,"kill")}</td><td><div class="chips">${tags.join("")||'<span class="dim">—</span>'}</div></td></tr>`;
+  }).join(""):`<tr><td colspan="5" class="empty">“${esc(q)}”는 이 기준의 공개 순위에 없어요.</td></tr>`;
+  $("#k-foot").textContent=d.foot;
+}
+function renderLists(){
+  const li=(arr,withV)=>arr.map((x,i)=>{const [n,v]=Array.isArray(x)?x:[x];return `<li><span class="i">${i+1}</span><span class="t">${esc(n)}</span>${withV?(v!=null?`<span class="num">${v.toFixed(1)}%</span>`:`<span class="dim">—</span>`):"<span></span>"}</li>`}).join("");
+  $("#kperks").innerHTML=li(META.kperks);$("#sperks").innerHTML=li(META.sperks);$("#survs").innerHTML=li(META.survs,true);
+  const lo=35,hi=50,w=v=>((v-lo)/(hi-lo)*100).toFixed(1)+"%";
+  $("#party").innerHTML=META.party.map(([n,share,e])=>`<div class="row"><span>${n}</span><div class="track"><div class="fill" style="width:${w(e)}"></div><span class="share num">비중 ${share}%</span></div><span class="num">${e.toFixed(1)}%</span></div>`).join("")
+    +`<div class="row all"><span>전체</span><div class="track"><div class="fill" style="width:${w(META.all)}"></div></div><span class="num">${META.all.toFixed(1)}%</span></div>`
+    +`<div class="scale"><span>35%</span><span>50%</span></div>`;
+}
+function renderRegion(){
+  const cell=v=>Array.isArray(v)?`${esc(v[0])} <span class="num">${v[1].toFixed(1)}%</span>`:esc(v);
+  $("#cmp-body").innerHTML=REGIONS.rows.map(([label,vals])=>`<tr><td>${label}</td>${REGIONS.order.map(r=>`<td${r==="ao"?' class="me"':""}>${cell(vals[r])}</td>`).join("")}</tr>`).join("");
+  const g=i=>REGIONS.rows[i][1].ao;
+  $("#ao-killer").innerHTML=`${avatar(g(0))}${esc(g(0))}`;
+  $("#ao-kr").innerHTML=`${avatar(g(1)[0])}${esc(g(1)[0])} <span class="big">${g(1)[1]}%</span>`;
+  $("#ao-surv").innerHTML=esc(g(2));
+  $("#ao-esc").innerHTML=`${esc(g(3)[0])} <span class="big">${g(3)[1]}%</span>`;
+}
+
+/* ---------- 이번 주 ---------- */
+function renderWeekly(){
+  $("#w-updated").textContent=W.updated||"—";
+  const sh=W.shrine;
+  if(sh&&sh.perks){
+    $("#sh-range").textContent=`${fmtDate(sh.start)} – ${fmtDate(sh.end)} (한국 시간 수요일 0시 교체)`;
+    $("#shrine").innerHTML=sh.perks.map(p=>`<div class="perk"><div class="glyph" style="--h:${p.role==="킬러"?"var(--blood)":"var(--ember)"}"><span>${esc(p.name[0])}</span></div><b>${esc(p.name)}</b><div class="own">${esc(p.role)} · ${esc(p.owner)}</div><div class="cost num">파편 ${Number(p.cost).toLocaleString()}</div></div>`).join("");
+  }else{$("#shrine").innerHTML=`<div class="empty">이번 주 성소 정보를 준비 중이에요.</div>`;}
+  const codes=W.codes||[];
+  $("#codes").innerHTML=codes.length?codes.map((c,i)=>{
+    let exp;
+    if(c.expires){const d=daysLeft(c.expires);exp=d<0?`<span class="dim">만료됨</span>`:`<span class="dday${d<=7?" soon":""}">${c.expires.slice(5).replace("-","/")} · D-${d}</span>`;}
+    else exp=`<span class="dim">${esc(c.note||"기한 미정")}</span>`;
+    return `<tr><td class="code">${esc(c.code)}</td><td>${esc(c.reward)}</td><td>${exp}</td><td><button class="copy" type="button" id="copy-${i}" data-code="${esc(c.code)}">복사</button></td></tr>`;
+  }).join(""):`<tr><td colspan="4" class="empty">지금 쓸 수 있는 기간 한정 코드가 없어요.</td></tr>`;
+  $("#perm-note").innerHTML=W.permanentCodes?`기한 없는 코드 ${W.permanentCodes}개는 <a href="https://nightlight.gg/codes" target="_blank" rel="noopener">전체 목록</a>에서`:"";
+  const evs=(W.events||[]).filter(e=>daysLeft(e.end)>=0);
+  $("#events").innerHTML=evs.length?evs.map(e=>{
+    const s=new Date(e.start+"T00:00:00+09:00"),en=new Date(e.end+"T23:59:59+09:00");
+    const pct=Math.min(100,Math.max(0,(Date.now()-s)/(en-s)*100));
+    return `<div class="ev"><h3>${esc(e.name)}</h3><div class="facts"><dt>기간</dt><dd class="num">${e.start.slice(5).replace("-","/")} – ${e.end.slice(5).replace("-","/")}</dd><dt>남은 기간</dt><dd class="num">${daysLeft(e.end)}일</dd></div><div class="progress" aria-hidden="true"><i style="width:${pct.toFixed(0)}%"></i></div><p>${esc(e.note||"")}</p></div>`;
+  }).join(""):`<p>지금 진행 중인 이벤트가 없어요.</p>`;
+  const k=W.newKiller;
+  if(k){
+    $("#nk-sub").textContent=`${k.release} 출시`;
+    $("#newkiller").innerHTML=`<div class="who">${avatar(k.name)}<div><div class="name">${esc(k.name)}</div><div class="dim">${esc(k.chapter)}</div></div></div>
+      <p>${esc(k.desc)}</p>
+      <dl class="facts"><dt>능력</dt><dd>${esc(k.power)}</dd><dt>이동 속도</dt><dd class="num">${esc(k.speed)}</dd><dt>공포 범위</dt><dd class="num">${esc(k.terror)}</dd><dt>고유 퍽</dt><dd>${(k.perks||[]).map(esc).join(", ")}</dd></dl>
+      <p class="dim">${esc(k.note||"")}</p>`;
+  }
+  $("#patches").innerHTML=(W.patches||[]).map(p=>`<div class="patch"><div class="patch-h"><b>${esc(p.ver)}</b><span>${esc(p.title)}</span><span class="dim">${esc(p.date)}</span></div><ul>${p.items.map(it=>`<li>${it}</li>`).join("")}</ul></div>`).join("");
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".copy[data-code], #id-copy");if(!b)return;
+  const text=b.dataset.code||$("#id-value").textContent;
+  const ok=()=>{b.textContent="복사됨";b.classList.add("done");setTimeout(()=>{b.textContent="복사";b.classList.remove("done")},1600);};
+  try{navigator.clipboard.writeText(text).then(ok,()=>selectText(b));}catch(err){selectText(b);}
+});
+function selectText(b){const el=b.closest("tr")?.querySelector(".code")||$("#id-value");const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="선택됨 · Ctrl+C";}
+
+/* ---------- 전적 검색 ---------- */
+function parseSteam(raw){
+  const s=raw.trim();
+  if(!s)return {err:"스팀 프로필 주소나 아이디를 넣어 주세요."};
+  let m=s.match(/steamcommunity\.com\/profiles\/(7656\d{13})/i);
+  if(m)return {kind:"숫자 아이디",id:m[1],url:`https://steamcommunity.com/profiles/${m[1]}`};
+  m=s.match(/steamcommunity\.com\/id\/([A-Za-z0-9_-]{2,32})/i);
+  if(m)return {kind:"사용자 지정 주소",id:m[1],url:`https://steamcommunity.com/id/${m[1]}`};
+  if(/^7656\d{13}$/.test(s))return {kind:"숫자 아이디",id:s,url:`https://steamcommunity.com/profiles/${s}`};
+  if(/^\d+$/.test(s))return {err:"숫자 아이디는 7656으로 시작하는 17자리예요. 다시 확인해 주세요."};
+  if(/^[A-Za-z0-9_-]{2,32}$/.test(s))return {kind:"사용자 지정 주소",id:s,url:`https://steamcommunity.com/id/${s}`};
+  return {err:"알아볼 수 없는 형식이에요. 프로필 주소를 통째로 붙여넣어 보세요."};
+}
+$("#steam-form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const r=parseSteam($("#steam-input").value);
+  $("#steam-err").textContent=r.err||"";
+  $("#steam-result").hidden=!!r.err;
+  if(r.err)return;
+  $("#id-kind").textContent=r.kind;$("#id-value").textContent=r.id;
+  $("#steam-links").innerHTML=[
+    [r.url,"스팀 프로필 열기","공개 설정이 맞는지 먼저 확인하세요"],
+    ["https://nightlight.gg/steam-stats","나이트라이트 스팀 전적","킬·탈출·플레이 시간과 리더보드 순위"],
+    ["https://stats.deadbydaylight.com","개발사 공식 전적","비헤이비어 계정 연동 후 경기 기록 확인"]
+  ].map(([h,t,d])=>`<a class="link" href="${esc(h)}" target="_blank" rel="noopener"><div><b>${t}</b><span>${d}</span></div><span class="go">열기 →</span></a>`).join("");
+});
+
+/* ---------- 화면 전환 ---------- */
+const VIEWS=["meta","weekly","steam"];
+function show(v){
+  if(!VIEWS.includes(v))v="meta";
+  VIEWS.forEach(x=>{$("#view-"+x).hidden=x!==v;const b=$("#nav-"+x);if(x===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
+  try{localStorage.setItem("fw-view",v)}catch(e){}
+}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>{show(b.dataset.view);try{history.replaceState(null,"","#"+b.dataset.view)}catch(e){}window.scrollTo({top:0});}));
+document.querySelectorAll("[data-ds]").forEach(b=>b.addEventListener("click",()=>{ds=b.dataset.ds;document.querySelectorAll("[data-ds]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderKillers();}));
+document.querySelectorAll("[data-sort]").forEach(b=>b.addEventListener("click",()=>{sortBy=b.dataset.sort;document.querySelectorAll("[data-sort]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderKillers();}));
+$("#k-search").addEventListener("input",e=>{q=e.target.value.trim();renderKillers();});
+
+/* ---------- 시계 ---------- */
+const hm=ms=>{const m=Math.max(0,Math.floor(ms/60000));const d=Math.floor(m/1440),h=Math.floor(m%1440/60),mm=m%60;return d?`${d}일 ${h}시간`:`${String(h).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;};
+function tick(){
+  const now=new Date();
+  const days=Math.floor((now-new Date("2026-10-18T00:00:00+09:00"))/86400000);
+  $("#since").textContent=days<=0?"오늘":`${days}일 전`;
+  if(W.shrine){
+    const end=new Date(W.shrine.end);
+    const stale=now>=end;
+    $("#sh-stale").hidden=!stale;
+    let next=new Date(end);while(next<=now)next=new Date(next.getTime()+7*86400000);
+    $("#cd-shrine").textContent=hm(next-now);
+  }
+}
+
+renderRegion();renderKillers();renderLists();renderWeekly();
+let start="meta";try{start=(location.hash||"").slice(1)||localStorage.getItem("fw-view")||"meta"}catch(e){}
+show(start);tick();setInterval(tick,30000);
+</script>
+
+</body>
+</html>
